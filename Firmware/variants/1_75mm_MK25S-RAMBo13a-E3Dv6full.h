@@ -21,6 +21,8 @@
 // Printer name
 #define CUSTOM_MENDEL_NAME "Prusa i3 MK2.5S"
 
+winstar_oled = eeprom_read_byte((unsigned char *)EEPROM_WINSTAR_OLED);
+
 // WEH002004 OLED Display uncomment WEH002004_OLED if have this kind of display
 if (winstar_oled == 1) {
 	#define WEH002004_OLED
