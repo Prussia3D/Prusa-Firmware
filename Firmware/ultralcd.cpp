@@ -95,6 +95,9 @@ static bool lcd_autoDeplete;
 
 bool bearCalibration = eeprom_read_byte((unsigned char *)EEPROM_BEARMODE);
 
+// Winstar OLED
+bool winstar_oled = eeprom_read_byte((unsigned char *)EPPROM_WINSTAR_OLED);
+
 static float manual_feedrate[] = MANUAL_FEEDRATE;
 
 /* !Configuration settings */
@@ -1001,17 +1004,19 @@ static void lcd_status_screen()
 
 	if (lcd_draw_update)
 	{
-		ReInitLCD++;
-		if (ReInitLCD == 30)
-		{
-			lcd_refresh(); // to maybe revive the LCD if static electricity killed it.
-			ReInitLCD = 0 ;
-		}
-		else
-		{
-			if ((ReInitLCD % 10) == 0)
-				lcd_refresh_noclear(); //to maybe revive the LCD if static electricity killed it.
-		}
+        #ifndef WEH002004_OLED //Refreshing the Status Screen is too noticible on OLED display
+    		ReInitLCD++;
+    		if (ReInitLCD == 30)
+    		{
+    			lcd_refresh(); // to maybe revive the LCD if static electricity killed it.
+    			ReInitLCD = 0 ;
+    		}
+    		else
+    		{
+    			if ((ReInitLCD % 10) == 0)
+    				lcd_refresh_noclear(); //to maybe revive the LCD if static electricity killed it.
+    		}
+        #endif
 
 		lcdui_print_status_screen();
 
@@ -4651,6 +4656,13 @@ void set_bear() {
     eeprom_update_byte((unsigned char *)EEPROM_BEARMODE, bearCalibration);
 }
 
+void set_oled() {
+     winstar_oled == eeprom_read_byte((unsigned char *)EPPROM_WINSTAR_OLED);
+    if(winstar_oled == 1) winstar_oled = 0;
+    else winstar_oled = 1;
+    eeprom_update_byte((unsigned char *)EPPROM_WINSTAR_OLED, winstar_oled);
+}
+
 #ifndef SNMM
 
 /*void lcd_calibrate_extruder() {
@@ -5715,10 +5727,16 @@ void lcd_hw_setup_menu(void)                      // can not be "static"
     MENU_ITEM_SUBMENU_P(_i("Steel sheets"), sheets_menu);
     SETTINGS_NOZZLE;
     MENU_ITEM_SUBMENU_P(_i("Checks"), lcd_checking_menu);
-     if (bearCalibration == 1) {
+    if (bearCalibration == 1) {
         MENU_ITEM_FUNCTION_P(_i("Bear Cal.    [on]"), set_bear);
     } else {
         MENU_ITEM_FUNCTION_P(_i("Bear Cal.   [off]"), set_bear);
+    }
+
+    if (winstar_oled == 1) {
+        MENU_ITEM_FUNCTION_P(_i("OLED Supp.   [on]"), set_oled);
+    } else {
+        MENU_ITEM_FUNCTION_P(_i("OLED Supp.  [off]"), set_oled);
     }
 
 #if IR_SENSOR_ANALOG
