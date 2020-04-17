@@ -102,6 +102,11 @@ bool bearCalibration = eeprom_read_byte((unsigned char *)EEPROM_BEARMODE);
 // Winstar OLED
 bool winstar_oled = eeprom_read_byte((unsigned char *)EPPROM_WINSTAR_OLED);
 
+// Can_Load Check
+int mmu_preset = eeprom_read_byte((unsigned char *)EEPROM_MMU_PRESET);
+int set_mmu_load_distance = eeprom_read_byte((unsigned char *)EEPROM_MMU_LOAD);
+int set_mmu_unload_distance = eeprom_read_byte((unsigned char *)EEPROM_MMU_UNLOAD);
+
 static float manual_feedrate[] = MANUAL_FEEDRATE;
 
 /* !Configuration settings */
@@ -4682,6 +4687,42 @@ void set_oled() {
     eeprom_update_byte((unsigned char *)EPPROM_WINSTAR_OLED, winstar_oled);
 }
 
+void set_standard_v6() {
+    mmu_preset = 0;
+    set_mmu_load_distance = 60;
+    set_mmu_unload_distance = 52;
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_PRESET, mmu_preset);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_LOAD, set_mmu_load_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_UNLOAD, set_mmu_unload_distance);
+}
+
+void set_slice_magnum() {
+    mmu_preset = 1;
+    set_mmu_load_distance = 56;
+    set_mmu_unload_distance = 48;
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_PRESET, mmu_preset);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_LOAD, set_mmu_load_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_UNLOAD, set_mmu_unload_distance);
+}
+
+void set_skeletruder() {
+    mmu_preset = 2;
+    set_mmu_load_distance = 55;
+    set_mmu_unload_distance = 47;
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_PRESET, mmu_preset);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_LOAD, set_mmu_load_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_UNLOAD, set_mmu_unload_distance);
+}
+
+void set_bondtech_mk3s() {
+    mmu_preset = 3;
+    set_mmu_load_distance = 71;
+    set_mmu_unload_distance = 63;
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_PRESET, mmu_preset);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_LOAD, set_mmu_load_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_UNLOAD, set_mmu_unload_distance);
+}
+
 #ifndef SNMM
 
 /*void lcd_calibrate_extruder() {
@@ -5738,6 +5779,35 @@ static void sheets_menu()
     MENU_END();
 }
 
+static void pick_mmu_preset_menu()
+{
+    MENU_BEGIN();
+    MENU_ITEM_BACK_P(_i("MMU Settings"));
+    MENU_ITEM_FUNCTION_P(_i("Standard v6"), set_standard_v6);
+    MENU_ITEM_FUNCTION_P(_i("Slice Magnum"), set_slice_magnum);
+    MENU_ITEM_FUNCTION_P(_i("Skeletruder"), set_skeletruder);
+    MENU_ITEM_FUNCTION_P(_i("Bondtech MK3S"), set_bondtech_mk3s);
+    MENU_END();
+}
+
+void mmu_settings_menu(void)
+{
+    MENU_BEGIN();
+    MENU_ITEM_BACK_P(_i("HW Setup"));
+    if (mmu_preset == 0) {
+        MENU_ITEM_SUBMENU_P(_i("Preset: Standard v6"), pick_mmu_preset_menu);
+    } else if (mmu_preset == 1) {
+        MENU_ITEM_SUBMENU_P(_i("Preset: Slice Magnum"), pick_mmu_preset_menu);
+    } else if (mmu_preset == 2) {
+        MENU_ITEM_SUBMENU_P(_i("Preset: Skeletruder"), pick_mmu_preset_menu);
+    } else if (mmu_preset == 3) {
+        MENU_ITEM_SUBMENU_P(_i("Preset: Bondtech MK3S"), pick_mmu_preset_menu);
+    }
+    MENU_ITEM_EDIT_int3_P(_i("Load Check"), &set_mmu_load_distance, 10, 90);
+    MENU_ITEM_EDIT_int3_P(_i("Unload Check"), &set_mmu_unload_distance, 0, 80);
+    MENU_END();
+}
+
 void lcd_hw_setup_menu(void)                      // can not be "static"
 {
     MENU_BEGIN();
@@ -5756,6 +5826,10 @@ void lcd_hw_setup_menu(void)                      // can not be "static"
         MENU_ITEM_FUNCTION_P(_i("OLED Supp.   [on]"), set_oled);
     } else {
         MENU_ITEM_FUNCTION_P(_i("OLED Supp.  [off]"), set_oled);
+    }
+
+    if (mmu_enabled) {
+        MENU_ITEM_SUBMENU_P(_i("MMU Settings"), mmu_settings_menu);
     }
 
 #ifdef IR_SENSOR_ANALOG

@@ -561,9 +561,12 @@ static Sheets * const EEPROM_Sheets_base = (Sheets*)(EEPROM_SHEETS_BASE);
 
 #define EEPROM_BEARMODE (EEPROM_UVLO_LA_K-1) // unsigned char
 #define EPPROM_WINSTAR_OLED (EEPROM_BEARMODE-1) // unsigned char
+#define EEPROM_MMU_PRESET (EPPROM_WINSTAR_OLED-2) // uint16
+#define EEPROM_MMU_LOAD (EEPROM_MMU_PRESET-1) // uint8
+#define EEPROM_MMU_UNLOAD (EEPROM_MMU_LOAD-1) // uint8
 
 //This is supposed to point to last item to allow EEPROM overrun check. Please update when adding new items.
-#define EEPROM_LAST_ITEM EPPROM_WINSTAR_OLED
+#define EEPROM_LAST_ITEM EEPROM_MMU_UNLOAD
 // !!!!!
 // !!!!! this is end of EEPROM section ... all updates MUST BE inserted before this mark !!!!!
 // !!!!!

@@ -1445,9 +1445,12 @@ bFilamentAction=false;                            // NOT in "mmu_fil_eject_menu(
 //! @retval false Doesn't fit
 static bool can_load()
 {
-    current_position[E_AXIS] += 60;
+	int mmu_load_distance = eeprom_read_byte((unsigned char *)EEPROM_MMU_LOAD);
+	int mmu_unload_distance = eeprom_read_byte((unsigned char *)EEPROM_MMU_UNLOAD);
+
+    current_position[E_AXIS] += mmu_load_distance; // Was 60
     plan_buffer_line_curposXYZE(MMU_LOAD_FEEDRATE, active_extruder);
-    current_position[E_AXIS] -= 52;
+    current_position[E_AXIS] -= mmu_unload_distance; // Was 52
     plan_buffer_line_curposXYZE(MMU_LOAD_FEEDRATE, active_extruder);
     st_synchronize();
 
