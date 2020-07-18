@@ -1,0 +1,111 @@
+kind: pipeline
+name: default
+
+workspace:
+  path: Prusa-Firmware
+
+steps:
+  - name: enviornment
+    image: vertigo235/fw-build:1
+    commands:
+      - printenv
+    when:
+      event: 
+        - push
+        - tag
+        - pull_request
+  
+  - name: tests
+    image: vertigo235/fw-build:1
+    commands:
+      - bash -x test.sh
+    when:
+      event: 
+        - push
+        - tag
+        - pull_request
+  
+  - name: build
+    image: vertigo235/fw-build:1
+    environment:
+      BUILD_TYPE: GOLD
+    commands:
+      - pwd
+      - chmod +x PF-build.sh
+      - chmod +x lang/config.sh
+      - chmod +x lang/fw-clean.sh
+      - chmod +x lang/lang-clean.sh
+      - sed -i -e 's/#define FW_COMMIT_NR   [0-9]*/#define FW_COMMIT_NR  '"$DRONE_BUILD_STARTED"'/' Firmware/Configuration.h
+      - bash -x PF-build.sh 1_75mm_MK3S-EINSy10a-E3Dv6full.h ALL $BUILD_TYPE
+      - bash -x PF-build.sh PaulGD_1_75mm_MK3S-EINSy10a-E3Dv6full.h ALL $BUILD_TYPE
+    when:
+      event:
+       - push
+       - tag
+       - pull_request
+  
+  - name: prepare-hex
+    image: vertigo235/fw-build:1
+    commands:
+      - cd $DRONE_WORKSPACE
+      - mkdir out
+      - mkdir fileshare
+      - cd $DRONE_WORKSPACE_BASE/PF-build-hex
+      - find -type f -name "*.zip" -exec mv -t $DRONE_WORKSPACE/out {} +
+      - find -type f -name "*.hex" -exec mv -t $DRONE_WORKSPACE/out {} +
+      - cd $DRONE_WORKSPACE/fileshare
+      - zip -q -j prusa3d_fw_$(git rev-parse --short HEAD).zip $DRONE_WORKSPACE/out/*.*
+
+    when:
+      event:
+       - tag
+       - push
+       - pull_request
+    depends_on:
+      - build
+
+  - name: transfersh
+    image: vertigo235/fw-build:1
+    failure: ignore
+    commands:
+      - cd $DRONE_WORKSPACE/fileshare
+      - curl --upload-file prusa3d_fw_$(git rev-parse --short HEAD).zip https://transfer.sh/prusa3d_fw_$(git rev-parse --short HEAD).zip
+      - echo
+    when:
+      event:
+      - push
+      - tag
+      - pull_request
+    depends_on:
+      - prepare-hex
+
+  - name: fileio
+    image: vertigo235/fw-build:1
+    failure: ignore
+    commands:
+      - cd $DRONE_WORKSPACE/fileshare
+      - curl -F "file=@prusa3d_fw_$(git rev-parse --short HEAD).zip" https://file.io
+      - echo
+    when:
+      event:
+      - push
+      - tag
+      - pull_request
+    depends_on:
+      - prepare-hex
+
+  - name: publish
+    image: plugins/github-release
+    settings:
+      api_key:
+        from_secret: github-token
+      prerelease: true
+      draft: true    
+      checksum: md5
+      files: 
+        - $DRONE_WORKSPACE/out/*.*
+    when:
+      event: 
+        - tag
+    depends_on:
+      - prepare-hex
