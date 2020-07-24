@@ -13,7 +13,7 @@
 #define PRINTER_MMU_TYPE PRINTER_MK3S_MMU2
 #define PRINTER_MMU_NAME PRINTER_MK3S_MMU2_NAME
 #define FILAMENT_SIZE "1_75mm_MK3"
-#define NOZZLE_TYPE "E3Dv6full"
+#define NOZZLE_TYPE "E3Dv6pro"
 
 // Developer flag
 #define DEVELOPER
