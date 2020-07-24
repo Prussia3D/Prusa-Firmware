@@ -101,6 +101,8 @@ float pid_temp = DEFAULT_PID_TEMP;
 static bool forceMenuExpire = false;
 static bool lcd_autoDeplete;
 
+bool bearCalibration = eeprom_read_byte((unsigned char *)EEPROM_BEARMODE);
+
 
 static float manual_feedrate[] = MANUAL_FEEDRATE;
 
@@ -3513,6 +3515,9 @@ calibrated:
 	if ((PRINTER_TYPE == PRINTER_MK25) || (PRINTER_TYPE == PRINTER_MK2) || (PRINTER_TYPE == PRINTER_MK2_SNMM)) {
 		current_position[Z_AXIS] = Z_MAX_POS-3.f;
 	}
+	else if (bearCalibration == 1) {
+		current_position[Z_AXIS] = Z_MAX_POS-3.f;
+	}
 	else {
 		current_position[Z_AXIS] = Z_MAX_POS+4.f;
 	}
@@ -4652,6 +4657,13 @@ void lcd_calibrate_pinda() {
 	lcd_return_to_status();
 }
 
+void set_bear() {
+	bearCalibration = eeprom_read_byte((unsigned char *)EEPROM_BEARMODE);
+	if(bearCalibration == 0) bearCalibration = 1;
+	else bearCalibration = 0;
+	eeprom_update_byte((unsigned char *)EEPROM_BEARMODE, bearCalibration);
+}
+
 #ifndef SNMM
 
 /*void lcd_calibrate_extruder() {
@@ -5718,6 +5730,11 @@ void lcd_hw_setup_menu(void)                      // can not be "static"
     MENU_ITEM_SUBMENU_P(_i("Steel sheets"), sheets_menu); ////MSG_STEEL_SHEETS c=18
     SETTINGS_NOZZLE;
     MENU_ITEM_SUBMENU_P(_i("Checks"), lcd_checking_menu);
+	if (bearCalibration == 0)
+		MENU_ITEM_FUNCTION_P(_i("Bear Cal.   [Off]"), set_bear);
+	else {
+		MENU_ITEM_FUNCTION_P(_I("Bear Cal.    [On]"), set_bear);
+	}
 
 #ifdef IR_SENSOR_ANALOG
     FSENSOR_ACTION_NA;
