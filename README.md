@@ -1,4 +1,9 @@
-# Prusa Firmware MK3
+# Prusa Firmware MK3 | Fork by Prussia3D
+[![Build Status](https://drone.sachiki.rip/api/badges/Prussia3D/Prusa-Firmware/status.svg?ref=refs/heads/MK3)](https://drone.sachiki.rip/Prussia3D/Prusa-Firmware)
+
+##### **Warning: Prussia3D and it's contributors are in no way associated with Prusa Research s.r.o.**
+`Using any of Prussia3D's modifications is based on own responsibility, we do not take any responsibility if damage or loss occurs to your printer or you.
+As we are not official developers and thus not approved by Prusa Research s.r.o, we cannot gurantee your product warranty will stay unvoid when using this fork of the Firmware.`
 
 This repository contains the source code and the development versions of the firmware running on the [Original Prusa i3](https://prusa3d.com/) MK3S/MK3/MK2.5S/MK2.5 line of printers.
 
