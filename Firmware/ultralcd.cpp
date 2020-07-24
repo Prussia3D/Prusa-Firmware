@@ -2161,6 +2161,9 @@ static void lcd_support_menu()
   MENU_ITEM_BACK_P(PSTR(FILAMENT_SIZE));
   MENU_ITEM_BACK_P(PSTR(ELECTRONICS));
   MENU_ITEM_BACK_P(PSTR(NOZZLE_TYPE));
+  if(bearCalibration == 1) {
+	  MENU_ITEM_BACK_P(PSTR("Bearexxa 1.0")):
+  }
   MENU_ITEM_BACK_P(STR_SEPARATOR);
   MENU_ITEM_BACK_P(_i("Date:"));////MSG_DATE c=17 r=1
   MENU_ITEM_BACK_P(PSTR(__DATE__));
