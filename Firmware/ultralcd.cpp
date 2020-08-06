@@ -5752,9 +5752,9 @@ void lcd_hw_setup_menu(void)                      // can not be "static"
     SETTINGS_NOZZLE;
     MENU_ITEM_SUBMENU_P(_i("Checks"), lcd_checking_menu);
 	if (bearCalibration == 0)
-		MENU_ITEM_FUNCTION_P(_i("Bear Cal.   [Off]"), set_bear);
+		MENU_ITEM_FUNCTION_P(_i("Bear Cal.    [Off]"), set_bear);
 	else {
-		MENU_ITEM_FUNCTION_P(_I("Bear Cal.    [On]"), set_bear);
+		MENU_ITEM_FUNCTION_P(_I("Bear Cal.     [On]"), set_bear);
 	}
 
 #ifdef IR_SENSOR_ANALOG
