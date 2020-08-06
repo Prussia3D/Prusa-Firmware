@@ -1383,7 +1383,7 @@ void mmu_cut_filament(uint8_t filament_nr)
     bFilamentAction=false;                            // NOT in "mmu_load_to_nozzle_menu()"
     if (filament_nr == 5)
     {
-    	b = 0;
+    	uint8_t b = 0;
     	filament_nr = 0;
         while (b < 5) 
         {
