@@ -6371,6 +6371,7 @@ static void mmu_cut_filament_menu()
         MENU_ITEM_FUNCTION_NR_P(_T(MSG_CUT_FILAMENT), '3', mmu_cut_filament, 2);
         MENU_ITEM_FUNCTION_NR_P(_T(MSG_CUT_FILAMENT), '4', mmu_cut_filament, 3);
         MENU_ITEM_FUNCTION_NR_P(_T(MSG_CUT_FILAMENT), '5', mmu_cut_filament, 4);
+        MENU_ITEM_FUNCTION_NR_P(_T(MSG_CUT_FILAMENT), 'All', mmu_cut_filament, 5);
         MENU_END();
     }
     else

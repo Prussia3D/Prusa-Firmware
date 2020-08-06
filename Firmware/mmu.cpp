@@ -1381,7 +1381,24 @@ void mmu_cut_filament(uint8_t filament_nr)
 {
     menu_back();
     bFilamentAction=false;                            // NOT in "mmu_load_to_nozzle_menu()"
-    if (degHotend0() > EXTRUDE_MINTEMP)
+    if (filament_nr == 5)
+    {
+    	b = 0;
+    	filament_nr = 0;
+        while (b < 5) 
+        {
+        	LcdUpdateDisabler disableLcdUpdate;
+	        lcd_clear();
+	        lcd_set_cursor(0, 1); lcd_puts_P(_i("Cutting filament")); //// c=18
+	        lcd_print(" ");
+	        lcd_print(filament_nr + 1);
+	        mmu_filament_ramming();
+	        mmu_command(MmuCmd::K0 + filament_nr);
+	        manage_response(false, false, MMU_UNLOAD_MOVE);
+	        b = b + 1;
+        }
+    }
+    else
     {
         LcdUpdateDisabler disableLcdUpdate;
         lcd_clear();
@@ -1391,10 +1408,6 @@ void mmu_cut_filament(uint8_t filament_nr)
         mmu_filament_ramming();
         mmu_command(MmuCmd::K0 + filament_nr);
         manage_response(false, false, MMU_UNLOAD_MOVE);
-    }
-    else
-    {
-        show_preheat_nozzle_warning();
     }
 }
 #endif //MMU_HAS_CUTTER
