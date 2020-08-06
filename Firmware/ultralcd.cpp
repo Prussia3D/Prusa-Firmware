@@ -2098,6 +2098,9 @@ static void lcd_preheat_menu()
 //! 	@code{.unparsed}
 //! 	| Voltages           |	MSG_MENU_VOLTAGES
 //! 	@endcode
+//!
+//!
+//! 	| Experimental       |	c=18
 //! 
 //! 
 //! If DEBUG_BUILD is defined
@@ -2110,11 +2113,12 @@ static void lcd_preheat_menu()
 static void lcd_support_menu()
 {
 	typedef struct
-	{	// 22bytes total
+	{	// 23bytes total
 		int8_t status;                 // 1byte
 		bool is_flash_air;             // 1byte
 		uint8_t ip[4];                 // 4bytes
 		char ip_str[3*4+3+1];          // 16bytes
+		uint8_t experimental_menu_visibility; // 1byte
 	} _menu_data_t;
     static_assert(sizeof(menu_data)>= sizeof(_menu_data_t),"_menu_data_t doesn't fit into menu_data");
 	_menu_data_t* _md = (_menu_data_t*)&(menu_data[0]);
@@ -2128,6 +2132,14 @@ static void lcd_support_menu()
             sprintf_P(_md->ip_str, PSTR("%d.%d.%d.%d"), 
                 _md->ip[0], _md->ip[1], 
                 _md->ip[2], _md->ip[3]);
+        
+        _md->experimental_menu_visibility = eeprom_read_byte((uint8_t *)EEPROM_EXPERIMENTAL_VISIBILITY);
+        if (_md->experimental_menu_visibility == EEPROM_EMPTY_VALUE)
+        {
+            _md->experimental_menu_visibility = 0;
+            eeprom_update_byte((uint8_t *)EEPROM_EXPERIMENTAL_VISIBILITY, _md->experimental_menu_visibility);
+        }
+        
     } else if (_md->is_flash_air && 
         _md->ip[0] == 0 && _md->ip[1] == 0 && 
         _md->ip[2] == 0 && _md->ip[3] == 0 &&
@@ -2214,6 +2226,12 @@ static void lcd_support_menu()
 #if defined (VOLT_BED_PIN) || defined (VOLT_PWR_PIN)
   MENU_ITEM_SUBMENU_P(_i("Voltages"), lcd_menu_voltages);////MSG_MENU_VOLTAGES c=18 r=1
 #endif //defined VOLT_BED_PIN || defined VOLT_PWR_PIN
+
+  if (_md->experimental_menu_visibility)
+  {
+    MENU_ITEM_SUBMENU_P(PSTR("Experimental"), lcd_experimental_menu);////MSG_MENU_EXPERIMENTAL c=18
+  }
+
 
 #ifdef DEBUG_BUILD
   MENU_ITEM_SUBMENU_P(PSTR("Debug"), lcd_menu_debug);////c=18 r=1
@@ -8971,13 +8989,14 @@ void lcd_finishstatus() {
   lcd_draw_update = 2;
 
 }
+
 void lcd_setstatus(const char* message)
 {
   if (lcd_status_message_level > 0)
     return;
-  strncpy(lcd_status_message, message, LCD_WIDTH);
-  lcd_finishstatus();
+  lcd_updatestatus(message);
 }
+
 void lcd_updatestatuspgm(const char *message){
 	strncpy_P(lcd_status_message, message, LCD_WIDTH);
 	lcd_status_message[LCD_WIDTH] = 0;
@@ -8992,12 +9011,29 @@ void lcd_setstatuspgm(const char* message)
     return;
   lcd_updatestatuspgm(message);
 }
+
+void lcd_updatestatus(const char *message){
+	strncpy(lcd_status_message, message, LCD_WIDTH);
+	lcd_status_message[LCD_WIDTH] = 0;
+	lcd_finishstatus();
+	// hack lcd_draw_update to 1, i.e. without clear
+	lcd_draw_update = 1;
+}
+
 void lcd_setalertstatuspgm(const char* message)
 {
   lcd_setstatuspgm(message);
   lcd_status_message_level = 1;
   lcd_return_to_status();
 }
+
+void lcd_setalertstatus(const char* message)
+{
+  lcd_setstatus(message);
+  lcd_status_message_level = 1;
+  lcd_return_to_status();
+}
+
 void lcd_reset_alert_level()
 {
   lcd_status_message_level = 0;
@@ -9015,6 +9051,13 @@ void menu_lcd_longpress_func(void)
     {
         // disable longpress during re-entry, while homing or calibration
         lcd_quick_feedback();
+        return;
+    }
+    if (menu_menu == lcd_hw_setup_menu)
+    {
+        // only toggle the experimental menu visibility flag
+        lcd_quick_feedback();
+        lcd_experimental_toggle();
         return;
     }
 
@@ -9180,3 +9223,25 @@ void lcd_crash_detect_disable()
     eeprom_update_byte((uint8_t*)EEPROM_CRASH_DET, 0x00);
 }
 #endif
+
+void lcd_experimental_toggle()
+{
+    uint8_t oldVal = eeprom_read_byte((uint8_t *)EEPROM_EXPERIMENTAL_VISIBILITY);
+    if (oldVal == EEPROM_EMPTY_VALUE)
+        oldVal = 0;
+    else
+        oldVal = !oldVal;
+    eeprom_update_byte((uint8_t *)EEPROM_EXPERIMENTAL_VISIBILITY, oldVal);
+}
+
+void lcd_experimental_menu()
+{
+    MENU_BEGIN();
+    MENU_ITEM_BACK_P(_T(MSG_BACK));
+
+#ifdef EXTRUDER_ALTFAN_DETECT
+    MENU_ITEM_TOGGLE_P(_N("ALTFAN det."), altfanOverride_get()?_T(MSG_OFF):_T(MSG_ON), altfanOverride_toggle);////MSG_MENU_ALTFAN c=18
+#endif //EXTRUDER_ALTFAN_DETECT
+
+    MENU_END();
+}
