@@ -24,6 +24,8 @@ GENERAL SETTINGS
 // Electronics
 #define MOTHERBOARD BOARD_RAMBO_MINI_1_0
 
+#define kHOMING_CNT_MIN 63
+
 // Prusa Single extruder multiple material suport
 //#define SNMM
 

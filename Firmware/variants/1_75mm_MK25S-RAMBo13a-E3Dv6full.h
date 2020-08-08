@@ -28,6 +28,8 @@
 #define STEEL_SHEET
 #define TACH0PULLUP
 
+#define kHOMING_CNT_MIN 63
+
 // WEH002004 OLED Display uncomment WEH002004_OLED if have this kind of display
 //#define WEH002004_OLED
 

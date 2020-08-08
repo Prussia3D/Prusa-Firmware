@@ -29,6 +29,8 @@
 // PSU
 #define PSU_Delta                                 // uncomment if DeltaElectronics PSU installed
 
+#define kHOMING_CNT_MIN 63
+
 // WEH002004 OLED Display uncomment WEH002004_OLED if have this kind of display
 //#define WEH002004_OLED
 
