@@ -42,7 +42,6 @@ uint8_t tmc2130_mres[4] = {0, 0, 0, 0}; //will be filed at begin of init
 uint8_t tmc2130_sg_thr[4] = {TMC2130_SG_THRS_X, TMC2130_SG_THRS_Y, TMC2130_SG_THRS_Z, TMC2130_SG_THRS_E};
 uint8_t tmc2130_sg_thr_home[4] = TMC2130_SG_THRS_HOME;
 
-
 uint8_t tmc2130_sg_homing_axes_mask = 0x00;
 
 uint8_t tmc2130_sg_meassure = 0xff;
@@ -57,8 +56,8 @@ uint8_t tmc2130_home_fsteps[2] = {48, 48};
 uint8_t tmc2130_wave_fac[4] = {0, 0, 0, 0};
 
 tmc2130_chopper_config_t tmc2130_chopper_config[4] = {
-	{TMC2130_TOFF_XYZ, 5, 1, 2, 0},
-	{TMC2130_TOFF_XYZ, 5, 1, 2, 0},
+	{TMC2130_TOFF_XYZ, 2, 0, 2, 0},
+	{TMC2130_TOFF_XYZ, 2, 0, 2, 0},
 	{TMC2130_TOFF_XYZ, 5, 1, 2, 0},
 	{TMC2130_TOFF_E, 5, 1, 2, 0}
 };
