@@ -27,6 +27,8 @@
 #define STEEL_SHEET
 #define HAS_SECOND_SERIAL_PORT
 
+// WEH002004 OLED Display uncomment WEH002004_OLED if have this kind of display
+//#define WEH002004_OLED
 
 // Uncomment the below for the E3D PT100 temperature sensor (with or without PT100 Amplifier)
 //#define E3D_PT100_EXTRUDER_WITH_AMP
