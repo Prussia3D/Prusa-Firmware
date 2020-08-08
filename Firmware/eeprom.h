@@ -568,8 +568,14 @@ static Sheets * const EEPROM_Sheets_base = (Sheets*)(EEPROM_SHEETS_BASE);
 
 #define EEPROM_BEARMODE (EEPROM_EXPERIMENTAL_VISIBILITY-1) //unsigned char
 
+#define EEPROM_MMU_PRESET (EEPROM_BEARMODE-2) // uint16
+#define EEPROM_MMU_LOAD (EEPROM_MMU_PRESET-1) // uint8
+#define EEPROM_MMU_UNLOAD (EEPROM_MMU_LOAD-1) // uint8
+#define EEPROM_MMU_MELT_ZONE (EEPROM_MMU_LOAD-4) // float
+#define EEPROM_MMU_MELT_DISTANCE (EEPROM_MMU_MELT_ZONE-4) // float
+
 //This is supposed to point to last item to allow EEPROM overrun check. Please update when adding new items.
-#define EEPROM_LAST_ITEM EEPROM_BEARMODE
+#define EEPROM_LAST_ITEM EEPROM_MMU_MELT_DISTANCE
 // !!!!!
 // !!!!! this is end of EEPROM section ... all updates MUST BE inserted before this mark !!!!!
 // !!!!!

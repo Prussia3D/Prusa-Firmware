@@ -794,6 +794,9 @@ void manage_response(bool move_axes, bool turn_off_nozzle, uint8_t move)
 //!
 void mmu_load_to_nozzle()
 {
+	int mmu_melt_zone = eeprom_read_byte((unsigned char *)EEPROM_MMU_MELT_ZONE);
+	int mmu_melt_distance = eeprom_read_byte((unsigned char *)EEPROM_MMU_MELT_DISTANCE);
+
 	st_synchronize();
 	
 	const bool saved_e_relative_mode = axis_relative_modes & E_AXIS_MASK;
@@ -809,7 +812,7 @@ void mmu_load_to_nozzle()
     float feedrate = 562;
 	plan_buffer_line_curposXYZE(feedrate / 60);
     st_synchronize();
-	current_position[E_AXIS] += 14.4f;
+	current_position[E_AXIS] += mmu_melt_zone;
 	feedrate = 871;
 	plan_buffer_line_curposXYZE(feedrate / 60);
     st_synchronize();
@@ -817,7 +820,7 @@ void mmu_load_to_nozzle()
 	feedrate = 1393;
 	plan_buffer_line_curposXYZE(feedrate / 60);
     st_synchronize();
-	current_position[E_AXIS] += 14.4f;
+	current_position[E_AXIS] += mmu_melt_distance;
 	feedrate = 871;
 	plan_buffer_line_curposXYZE(feedrate / 60);
     st_synchronize();
@@ -1445,9 +1448,12 @@ bFilamentAction=false;                            // NOT in "mmu_fil_eject_menu(
 //! @retval false Doesn't fit
 static bool can_load()
 {
-    current_position[E_AXIS] += 60;
+	int mmu_load_distance = eeprom_read_byte((unsigned char *)EEPROM_MMU_LOAD);
+	int mmu_unload_distance = eeprom_read_byte((unsigned char *)EEPROM_MMU_UNLOAD);
+
+    current_position[E_AXIS] += mmu_load_distance;
     plan_buffer_line_curposXYZE(MMU_LOAD_FEEDRATE);
-    current_position[E_AXIS] -= 52;
+    current_position[E_AXIS] -= mmu_unload_distance;
     plan_buffer_line_curposXYZE(MMU_LOAD_FEEDRATE);
     st_synchronize();
 

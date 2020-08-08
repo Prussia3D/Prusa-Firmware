@@ -103,6 +103,12 @@ static bool lcd_autoDeplete;
 
 bool bearCalibration = eeprom_read_byte((unsigned char *)EEPROM_BEARMODE);
 
+// Can_Load Check
+int mmu_preset = eeprom_read_byte((unsigned char *)EEPROM_MMU_PRESET);
+int set_mmu_load_distance = eeprom_read_byte((unsigned char *)EEPROM_MMU_LOAD);
+int set_mmu_unload_distance = eeprom_read_byte((unsigned char *)EEPROM_MMU_UNLOAD);
+int set_mmu_melt_zone = eeprom_read_byte((unsigned char *)EEPROM_MMU_MELT_ZONE);
+int set_mmu_melt_distance = eeprom_read_byte((unsigned char *)EEPROM_MMU_MELT_DISTANCE);
 
 static float manual_feedrate[] = MANUAL_FEEDRATE;
 
@@ -4685,6 +4691,97 @@ void set_bear() {
 	eeprom_update_byte((unsigned char *)EEPROM_BEARMODE, bearCalibration);
 }
 
+void set_standard_v6() {
+    mmu_preset = 0;
+    set_mmu_load_distance = 60;
+    set_mmu_unload_distance = 52;
+    set_mmu_melt_zone = 14.4f;
+    set_mmu_melt_distance = 14.4f;
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_PRESET, mmu_preset);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_LOAD, set_mmu_load_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_UNLOAD, set_mmu_unload_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_MELT_ZONE, set_mmu_melt_zone);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_MELT_ZONE, set_mmu_melt_distance);
+}
+
+void set_slice_magnum() {
+    mmu_preset = 1;
+    set_mmu_load_distance = 56;
+    set_mmu_unload_distance = 48;
+    set_mmu_melt_zone = 9.4f;
+    set_mmu_melt_distance = 19.4f;
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_PRESET, mmu_preset);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_LOAD, set_mmu_load_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_UNLOAD, set_mmu_unload_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_MELT_ZONE, set_mmu_melt_zone);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_MELT_ZONE, set_mmu_melt_distance);
+}
+
+void set_skeletruder() {
+    mmu_preset = 2;
+    set_mmu_load_distance = 55;
+    set_mmu_unload_distance = 47;
+    set_mmu_melt_zone = 9.4f;
+    set_mmu_melt_distance = 14.4f;
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_PRESET, mmu_preset);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_LOAD, set_mmu_load_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_UNLOAD, set_mmu_unload_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_MELT_ZONE, set_mmu_melt_zone);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_MELT_ZONE, set_mmu_melt_distance);
+}
+
+void set_dragon_hf() {
+    mmu_preset = 3;
+    set_mmu_load_distance = 56;
+    set_mmu_unload_distance = 48;
+    set_mmu_melt_zone = 9.4f;
+    set_mmu_melt_distance = 19.4f;
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_PRESET, mmu_preset);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_LOAD, set_mmu_load_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_UNLOAD, set_mmu_unload_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_MELT_ZONE, set_mmu_melt_zone);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_MELT_ZONE, set_mmu_melt_distance);
+}
+
+void set_bondtech_mk3s() {
+    mmu_preset = 4;
+    set_mmu_load_distance = 71;
+    set_mmu_unload_distance = 63;
+    set_mmu_melt_zone = 25.4f;
+    set_mmu_melt_distance = 14.4f;
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_PRESET, mmu_preset);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_LOAD, set_mmu_load_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_UNLOAD, set_mmu_unload_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_MELT_ZONE, set_mmu_melt_zone);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_MELT_ZONE, set_mmu_melt_distance);
+}
+
+void set_bondtech_mosquito() {
+    mmu_preset = 5;
+    set_mmu_load_distance = 70;
+    set_mmu_unload_distance = 62;
+    set_mmu_melt_zone = 23.4f;
+    set_mmu_melt_distance = 16.4f;
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_PRESET, mmu_preset);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_LOAD, set_mmu_load_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_UNLOAD, set_mmu_unload_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_MELT_ZONE, set_mmu_melt_zone);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_MELT_ZONE, set_mmu_melt_distance);
+}
+
+void set_bondtech_mosquito_magnum() {
+    mmu_preset = 6;
+    set_mmu_load_distance = 70;
+    set_mmu_unload_distance = 62;
+    set_mmu_melt_zone = 18.4f;
+    set_mmu_melt_distance = 21.4f;
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_PRESET, mmu_preset);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_LOAD, set_mmu_load_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_UNLOAD, set_mmu_unload_distance);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_MELT_ZONE, set_mmu_melt_zone);
+    eeprom_update_byte((unsigned char *)EEPROM_MMU_MELT_ZONE, set_mmu_melt_distance);
+}
+
 #ifndef SNMM
 
 /*void lcd_calibrate_extruder() {
@@ -5743,6 +5840,44 @@ static void sheets_menu()
     MENU_END();
 }
 
+static void pick_mmu_preset_menu()
+{
+    MENU_BEGIN();
+    MENU_ITEM_BACK_P(_i("MMU Settings"));
+    MENU_ITEM_FUNCTION_P(_i("Standard v6"), set_standard_v6);
+    MENU_ITEM_FUNCTION_P(_i("Slice Magnum"), set_slice_magnum);
+    MENU_ITEM_FUNCTION_P(_i("Skeletruder"), set_skeletruder);
+    MENU_ITEM_FUNCTION_P(_i("Dragon HF"), set_dragon_hf);
+    MENU_ITEM_FUNCTION_P(_i("Bondtech MK3S"), set_bondtech_mk3s);
+    MENU_ITEM_FUNCTION_P(_i("Bondtech Mosquito"), set_bondtech_mosquito);
+    MENU_ITEM_FUNCTION_P(_i("Bondtech Mosquito Magnum"), set_bondtech_mosquito);
+    MENU_END();
+}
+
+void mmu_settings_menu(void)
+{
+    MENU_BEGIN();
+    MENU_ITEM_BACK_P(_i("HW Setup"));
+    if (mmu_preset == 0) {
+        MENU_ITEM_SUBMENU_P(_i("Preset: Standard v6"), pick_mmu_preset_menu);
+    } else if (mmu_preset == 1) {
+        MENU_ITEM_SUBMENU_P(_i("Preset: Slice Magnum"), pick_mmu_preset_menu);
+    } else if (mmu_preset == 2) {
+        MENU_ITEM_SUBMENU_P(_i("Preset: Skeletruder"), pick_mmu_preset_menu);
+    } else if (mmu_preset == 3) {
+        MENU_ITEM_SUBMENU_P(_i("Preset: Dragon HF"), pick_mmu_preset_menu);
+    } else if (mmu_preset == 4) {
+        MENU_ITEM_SUBMENU_P(_i("Preset: Bondtech MK3/S"), pick_mmu_preset_menu);
+    } else if (mmu_preset == 5) {
+        MENU_ITEM_SUBMENU_P(_i("Preset: Bondtech Mosquito"), pick_mmu_preset_menu);
+    } else if (mmu_preset == 6) {
+        MENU_ITEM_SUBMENU_P(_i("Preset: Bondtech Mos/Magnum"), pick_mmu_preset_menu);
+    }
+    MENU_ITEM_EDIT_int3_P(_i("Load Check"), &set_mmu_load_distance, 10, 90);
+    MENU_ITEM_EDIT_int3_P(_i("Unload Check"), &set_mmu_unload_distance, 0, 80);
+    MENU_END();
+}
+
 void lcd_hw_setup_menu(void)                      // can not be "static"
 {
     MENU_BEGIN();
@@ -5756,6 +5891,10 @@ void lcd_hw_setup_menu(void)                      // can not be "static"
 	else {
 		MENU_ITEM_FUNCTION_P(_I("Bear Cal.     [On]"), set_bear);
 	}
+
+    if (mmu_enabled) {
+        MENU_ITEM_SUBMENU_P(_i("MMU Settings"), mmu_settings_menu);
+    }
 
 #ifdef IR_SENSOR_ANALOG
     FSENSOR_ACTION_NA;
