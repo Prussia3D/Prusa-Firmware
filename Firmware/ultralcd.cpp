@@ -103,7 +103,6 @@ static bool lcd_autoDeplete;
 
 bool bearCalibration = eeprom_read_byte((unsigned char *)EEPROM_BEARMODE);
 
-
 static float manual_feedrate[] = MANUAL_FEEDRATE;
 
 /* !Configuration settings */
@@ -1011,17 +1010,17 @@ void lcd_status_screen()                          // NOT static due to using ins
 
 	if (lcd_draw_update)
 	{
-		ReInitLCD++;
-		if (ReInitLCD == 30)
-		{
-			lcd_refresh(); // to maybe revive the LCD if static electricity killed it.
-			ReInitLCD = 0 ;
-		}
-		else
-		{
-			if ((ReInitLCD % 10) == 0)
-				lcd_refresh_noclear(); //to maybe revive the LCD if static electricity killed it.
-		}
+        ReInitLCD++;
+        if (ReInitLCD == 30)
+        {
+            lcd_refresh(); // to maybe revive the LCD if static electricity killed it.
+            ReInitLCD = 0 ;
+        }
+        else
+        {
+            if ((ReInitLCD % 10) == 0)
+                lcd_refresh_noclear(); //to maybe revive the LCD if static electricity killed it.
+        }
 
 		lcdui_print_status_screen();
 
@@ -2173,6 +2172,7 @@ static void lcd_support_menu()
   MENU_ITEM_BACK_P(PSTR(FILAMENT_SIZE));
   MENU_ITEM_BACK_P(PSTR(ELECTRONICS));
   MENU_ITEM_BACK_P(PSTR(NOZZLE_TYPE));
+
   if(bearCalibration == 1) {
 	  MENU_ITEM_BACK_P(PSTR("Bearexxa 1.0"));
   }
@@ -3539,6 +3539,7 @@ calibrated:
 	else if (bearCalibration == 1) {
 		current_position[Z_AXIS] = Z_MAX_POS-3.f;
 	}
+
 	else {
 		current_position[Z_AXIS] = Z_MAX_POS+4.f;
 	}
@@ -5751,6 +5752,7 @@ void lcd_hw_setup_menu(void)                      // can not be "static"
     MENU_ITEM_SUBMENU_P(_i("Steel sheets"), sheets_menu); ////MSG_STEEL_SHEETS c=18
     SETTINGS_NOZZLE;
     MENU_ITEM_SUBMENU_P(_i("Checks"), lcd_checking_menu);
+
 	if (bearCalibration == 0)
 		MENU_ITEM_FUNCTION_P(_i("Bear Cal.    [Off]"), set_bear);
 	else {
