@@ -171,6 +171,7 @@ static void lcd_begin(uint8_t clear)
 	// set to 4-bit interface
 	lcd_send(LCD_FUNCTIONSET | LCD_4BITMODE, LOW | LCD_HALF_FLAG, 150);
 #endif
+
 	// finally, set # lines, font size, etc.0
 	lcd_command(LCD_FUNCTIONSET | lcd_displayfunction);
 	// turn the display on with no cursor or blinking default
@@ -182,7 +183,7 @@ static void lcd_begin(uint8_t clear)
 	lcd_displaymode = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT;
 	// set the entry mode
 	lcd_command(LCD_ENTRYMODESET | lcd_displaymode);
-
+	
 	#ifdef VT100
 	lcd_escape[0] = 0;
 	#endif
