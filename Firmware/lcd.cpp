@@ -247,9 +247,9 @@ void lcd_init(void)
 	lcd_displayfunction |= LCD_8BITMODE;
 #endif
 	lcd_displayfunction |= LCD_2LINE;
-	#ifdef WEH002004_OLED
-    	lcd_displayfunction |= OLED_FONT_TABLE;
-	#endif
+#ifdef WEH002004_OLED
+   	lcd_displayfunction |= OLED_FONT_TABLE;
+#endif
 	_delay_us(50000); 
 	lcd_begin(1); //first time init
 	fdev_setup_stream(lcdout, lcd_putchar, NULL, _FDEV_SETUP_WRITE); //setup lcdout stream
@@ -269,13 +269,21 @@ void lcd_refresh_noclear(void)
 
 void lcd_clear(void)
 {
-	lcd_command(LCD_CLEARDISPLAY, 1600);  // clear display, set cursor position to zero
+	#ifdef WEH002004_OLED
+		lcd_command(LCD_CLEARDISPLAY, 1600);  // clear display, set cursor position to zero
+	#else
+		lcd_command(LCD_CLEARDISPLAY, 1600);  // clear display, set cursor position to zero
+	#endif
 	lcd_currline = 0;
 }
 
 void lcd_home(void)
 {
-	lcd_command(LCD_RETURNHOME, 1600);  // set cursor position to zero
+	#ifdef WEH002004_OLED
+		lcd_command(LCD_RETURNHOME, 1600);  // set cursor position to zero. TBD
+	#else
+		lcd_command(LCD_RETURNHOME, 1600);  // set cursor position to zero
+	#endif
 	lcd_currline = 0;
 }
 

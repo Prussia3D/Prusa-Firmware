@@ -29,10 +29,10 @@
 // PSU
 #define PSU_Delta                                 // uncomment if DeltaElectronics PSU installed
 
+#define kHOMING_CNT_MIN 10
+
 // WEH002004 OLED Display uncomment WEH002004_OLED if have this kind of display
 #define WEH002004_OLED
-
-#define kHOMING_CNT_MIN 10
 
 // Uncomment the below for the E3D PT100 temperature sensor (with or without PT100 Amplifier)
 #define E3D_PT100_EXTRUDER_WITH_AMP
