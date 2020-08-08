@@ -16,7 +16,11 @@
 //-//
 #include "sound.h"
 
-#define LCD_DEFAULT_DELAY 100
+#ifdef WEH002004_OLED
+	#define LCD_DEFAULT_DELAY 100
+#else
+	#define LCD_DEFAULT_DELAY 100
+#endif
 
 #if (defined(LCD_PINS_D0) && defined(LCD_PINS_D1) && defined(LCD_PINS_D2) && defined(LCD_PINS_D3))
 	#define LCD_8BIT
@@ -247,9 +251,10 @@ void lcd_init(void)
 	lcd_displayfunction |= LCD_8BITMODE;
 #endif
 	lcd_displayfunction |= LCD_2LINE;
-#ifdef WEH002004_OLED
-   	lcd_displayfunction |= OLED_FONT_TABLE;
-#endif
+	#ifdef WEH002004_OLED
+   		lcd_displayfunction |= OLED_FONT_TABLE;
+	#endif
+
 	_delay_us(50000); 
 	lcd_begin(1); //first time init
 	fdev_setup_stream(lcdout, lcd_putchar, NULL, _FDEV_SETUP_WRITE); //setup lcdout stream
