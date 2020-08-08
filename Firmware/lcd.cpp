@@ -16,7 +16,11 @@
 //-//
 #include "sound.h"
 
-#define LCD_DEFAULT_DELAY 100
+#ifdef WEH002004_OLED
+	#define LCD_DEFAULT_DELAY 100
+#else
+	#define LCD_DEFAULT_DELAY 100
+#endif
 
 #if (defined(LCD_PINS_D0) && defined(LCD_PINS_D1) && defined(LCD_PINS_D2) && defined(LCD_PINS_D3))
 	#define LCD_8BIT
@@ -269,13 +273,21 @@ void lcd_refresh_noclear(void)
 
 void lcd_clear(void)
 {
-	lcd_command(LCD_CLEARDISPLAY, 1600);  // clear display, set cursor position to zero
+	#ifdef WEH002004_OLED
+		lcd_command(LCD_CLEARDISPLAY, 1600);  // clear display, set cursor position to zero
+	#else
+		lcd_command(LCD_CLEARDISPLAY, 1600);  // clear display, set cursor position to zero
+	#endif
 	lcd_currline = 0;
 }
 
 void lcd_home(void)
 {
-	lcd_command(LCD_RETURNHOME, 1600);  // set cursor position to zero
+	#ifdef WEH002004_OLED
+		lcd_command(LCD_RETURNHOME, 1600);  // set cursor position to zero. TBD
+	#else
+		lcd_command(LCD_RETURNHOME, 1600);  // set cursor position to zero
+	#endif
 	lcd_currline = 0;
 }
 
@@ -286,13 +298,11 @@ void lcd_display(void)
     lcd_command(LCD_DISPLAYCONTROL | lcd_displaycontrol, 1600);
 }
 
-#if 0
 void lcd_no_display(void)
 {
 	lcd_displaycontrol &= ~LCD_DISPLAYON;
 	lcd_command(LCD_DISPLAYCONTROL | lcd_displaycontrol, 1600);
 }
-#endif
 
 #ifdef VT100 //required functions for VT100
 // Turns the underline cursor on/off
